@@ -22,21 +22,15 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
           name: Run Unittest Suite
-          command: |
-            . venv/bin/activate
-            python -m unittest discover -s tests
+          command: . venv/bin/activate && pip install coverage && coverage run -m unittest discover -s tests && coverage report -m
 
   deploy_to_render:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Run Unittest Suite
-          command: |
-            . venv/bin/activate
-            pip install coverage
-            coverage run -m unittest discover -s tests
-            coverage report -m
+          name: Trigger Render Deploy Hook
+          command: curl -X POST "$RENDER_DEPLOY_HOOK"
 
 workflows:
   version: 2
