@@ -31,9 +31,11 @@ jobs:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Trigger Render Deploy Hook
+          name: Run Unittest Suite
           command: |
-            curl -X POST "$RENDER_DEPLOY_HOOK"
+            . venv/bin/activate
+            coverage run -m unittest discover -s tests
+            coverage report -m
 
 workflows:
   version: 2
